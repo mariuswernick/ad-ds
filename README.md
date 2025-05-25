@@ -1,37 +1,32 @@
-# Active Directory Domain Services Automation Script
+# Active Directory Domain Services Toolkit
 
-A comprehensive PowerShell script for automated deployment of Active Directory Domain Services (AD DS) on Windows Server environments. This script provides a complete, hands-off approach to setting up a domain controller with minimal manual intervention.
+A comprehensive collection of PowerShell scripts and tools for Active Directory Domain Services (AD DS) administration, automation, and management. This repository provides system administrators with battle-tested tools for common AD tasks, from initial deployment to ongoing maintenance.
 
-## 🎯 Purpose
+## 🎯 Overview
 
-This script automates the entire Active Directory deployment process, eliminating the need for manual intervention across multiple reboots and configuration phases. It's designed for system administrators, IT professionals, and organizations who need to deploy AD DS environments quickly and consistently.
+This toolkit is designed for system administrators, IT professionals, and organizations who work with Active Directory environments. Whether you're setting up new domains, managing users, or maintaining existing infrastructure, these tools will help streamline your AD operations.
 
-### What It Does
+## 🛠️ Available Tools
 
-- **Automated Computer Renaming**: Renames the server to your specified domain controller name (default: HQ-DC01)
-- **AD DS Role Installation**: Installs Active Directory Domain Services role and management tools
-- **Domain Controller Promotion**: Creates a new Active Directory forest and promotes the server to domain controller
-- **User Account Creation**: Automatically creates organizational units and user accounts for testing
-- **Multi-Phase Automation**: Uses Windows Registry RunOnce entries to handle reboots seamlessly
+### 🚀 [Setup-ADDomain.ps1](Setup-ADDomain.ps1) - Automated Domain Controller Deployment
 
-## ✨ Key Features
+A comprehensive script for automated deployment of Active Directory Domain Services with zero-touch installation.
 
-- **Zero-Touch Deployment**: Run once, then the script handles everything automatically
-- **Registry-Based Automation**: Uses Windows RunOnce registry entries (more reliable than scheduled tasks)
-- **Visible Progress**: PowerShell windows remain visible throughout all phases for transparency
-- **Customizable Configuration**: Flexible parameters for domain names, DC names, and user counts
-- **Enterprise Ready**: Suitable for lab environments, testing, and proof-of-concept deployments
-- **Error Handling**: Comprehensive error checking and logging throughout the process
+**What it does:**
+- Automated computer renaming to specified DC name (default: HQ-DC01)
+- AD DS role installation with management tools
+- Domain controller promotion with new forest creation
+- Automatic user account and OU creation for testing
+- Multi-phase automation using Windows Registry RunOnce entries
 
-## 🚀 Quick Start
+**Key Features:**
+- ✅ **Zero-Touch Deployment**: Run once, handles everything automatically
+- ✅ **Registry-Based Automation**: More reliable than scheduled tasks
+- ✅ **Visible Progress**: PowerShell windows remain visible throughout
+- ✅ **Customizable Configuration**: Flexible parameters for various scenarios
+- ✅ **Enterprise Ready**: Suitable for lab, testing, and PoC deployments
 
-### Prerequisites
-
-- Windows Server (2016, 2019, 2022)
-- Administrator privileges
-- PowerShell execution policy set to allow script execution
-
-### Basic Usage
+#### Quick Start
 
 ```powershell
 # Set up the required passwords
@@ -42,14 +37,14 @@ $userPassword = ConvertTo-SecureString "TestUser123!" -AsPlainText -Force
 .\Setup-ADDomain.ps1 -DomainName "company.local" -SafeModeAdministratorPassword $safePassword -DefaultUserPassword $userPassword -NumberOfUsers 15
 ```
 
-### Advanced Usage
+#### Advanced Usage
 
 ```powershell
 # Custom domain controller name and configuration
 .\Setup-ADDomain.ps1 -DomainName "corp.example.com" -SafeModeAdministratorPassword $safePassword -DefaultUserPassword $userPassword -NumberOfUsers 25 -DCName "MAIN-DC01"
 ```
 
-## 📋 Parameters
+#### Parameters
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
@@ -61,33 +56,17 @@ $userPassword = ConvertTo-SecureString "TestUser123!" -AsPlainText -Force
 
 *Required only for initial setup
 
-## 🔄 Process Flow
+#### Process Flow
 
 The script operates in three distinct phases:
 
-### Phase 1: Computer Preparation
-- Installs Active Directory Domain Services role
-- Renames computer to specified DC name
-- Creates registry entry for Phase 2
-- Automatically reboots
+1. **Computer Preparation**: Installs AD DS role, renames computer, creates registry entry, reboots
+2. **Domain Provisioning**: Promotes to DC, creates AD forest, installs DNS, reboots
+3. **User Creation**: Creates organizational structure and test users, completes setup
 
-### Phase 2: Domain Provisioning
-- Promotes server to domain controller
-- Creates new Active Directory forest
-- Installs and configures DNS services
-- Creates registry entry for Phase 3
-- Automatically reboots
+#### What Gets Created
 
-### Phase 3: User Creation
-- Waits for Active Directory services to be ready
-- Creates organizational structure (Company OU with department sub-OUs)
-- Generates specified number of test users with random names
-- Distributes users across different departments
-- Completes setup and cleans up temporary files
-
-## 📁 What Gets Created
-
-### Organizational Structure
+**Organizational Structure:**
 ```
 Domain Root
 └── Company OU
@@ -99,66 +78,125 @@ Domain Root
     └── Operations OU
 ```
 
-### User Accounts
+**User Accounts:**
 - Random first and last names from predefined lists
 - Unique usernames (firstname.lastname + random number)
 - Email addresses based on domain name
 - Distributed across different department OUs
 - Enabled accounts with non-expiring passwords
 
+---
+
+## 🔮 Coming Soon
+
+*Additional tools currently in development:*
+
+- **Bulk User Management Scripts** - Import/export users from CSV
+- **Group Policy Automation Tools** - Deploy and manage GPOs at scale
+- **AD Health Check Scripts** - Comprehensive domain health monitoring
+- **Replication Monitoring Tools** - Track and troubleshoot AD replication
+- **Security Audit Scripts** - Identify security gaps and compliance issues
+- **Backup and Recovery Tools** - Automated AD backup and restore procedures
+- **Migration Utilities** - Tools for domain migrations and upgrades
+- **Permission Management** - Audit and manage AD permissions
+- **Certificate Services Tools** - PKI deployment and management scripts
+
+## 📋 Prerequisites
+
+- Windows Server (2016, 2019, 2022)
+- Administrator privileges
+- PowerShell execution policy set to allow script execution
+- Appropriate network configuration for domain services
+
+## 🔧 Getting Started
+
+1. **Clone the repository:**
+   ```powershell
+   git clone https://github.com/mariuswernick/ad-ds.git
+   cd ad-ds
+   ```
+
+2. **Set execution policy if needed:**
+   ```powershell
+   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+   ```
+
+3. **Choose your tool and review the documentation**
+
+4. **Run the examples or customize for your environment**
+
+## 💡 Examples
+
+Check out the [examples](examples/) directory for:
+- **[basic-usage.ps1](examples/basic-usage.ps1)** - Simple setup scenarios
+- **[advanced-usage.ps1](examples/advanced-usage.ps1)** - Complex configurations with pre-flight checks
+
 ## 🛡️ Security Considerations
 
-- **DSRM Password**: The SafeModeAdministratorPassword is used for Directory Services Restore Mode
-- **User Passwords**: Test user accounts use the same password for simplicity
-- **Registry Storage**: Passwords are temporarily stored in encrypted format in the registry
-- **Cleanup**: All temporary files and registry entries are cleaned up after completion
+- **Production Use**: These tools are designed for lab and testing environments
+- **Password Security**: Ensure all passwords meet your organization's complexity requirements
+- **Network Security**: Verify network settings and firewall configurations
+- **Backup Strategy**: Always have a backup plan before making changes
+- **Testing**: Test scripts in non-production environments first
 
-## 📝 Logging
+## 📝 Logging and Monitoring
 
-The script creates detailed logs at `C:\Windows\Temp\ADSetup_[timestamp].log` for troubleshooting and audit purposes.
+All scripts create detailed logs for troubleshooting and audit purposes:
+- Location: `C:\Windows\Temp\`
+- Format: `ToolName_[timestamp].log`
+- Content: Comprehensive operation logs with timestamps
 
 ## ⚠️ Important Notes
 
-- **Production Use**: This script is designed for lab and testing environments
-- **Password Complexity**: Ensure passwords meet your organization's complexity requirements
-- **Network Configuration**: Verify network settings before running the script
-- **Backup**: Consider taking a system backup before running the script
+- **Environment**: These scripts are designed for lab, testing, and development environments
+- **Customization**: Review and modify scripts to match your specific requirements
+- **Documentation**: Each tool includes comprehensive inline documentation
+- **Support**: Check individual script documentation for specific requirements and limitations
 
 ## 🔧 Troubleshooting
 
 ### Common Issues
 
-1. **Script Execution Policy**: Set execution policy with `Set-ExecutionPolicy RemoteSigned`
-2. **Administrator Rights**: Ensure PowerShell is running as Administrator
-3. **Network Connectivity**: Verify the server has proper network configuration
-4. **Password Requirements**: Ensure SafeModePassword meets complexity requirements
+1. **Script Execution Policy**: Set with `Set-ExecutionPolicy RemoteSigned`
+2. **Administrator Rights**: Ensure PowerShell runs as Administrator
+3. **Network Configuration**: Verify proper network settings
+4. **Password Requirements**: Ensure passwords meet complexity requirements
+5. **Prerequisites**: Verify all required Windows features are available
 
-### Manual Recovery
+### Getting Help
 
-If the automated process fails, you can run individual phases:
-
-```powershell
-# Run domain provisioning manually
-.\Setup-ADDomain.ps1 -ProvisionDomain
-
-# Run user creation manually
-.\Setup-ADDomain.ps1 -CreateUsers -DefaultUserPassword $userPassword
-```
+- Check the individual script documentation
+- Review the examples directory
+- Examine log files in `C:\Windows\Temp\`
+- Open an issue in the repository for bugs or feature requests
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests.
+Contributions are welcome! Whether you have:
+- New tools to add to the toolkit
+- Improvements to existing scripts  
+- Bug fixes or optimizations
+- Documentation updates
+- Usage examples
+
+Please feel free to:
+- Fork the repository
+- Create feature branches
+- Submit pull requests
+- Open issues for bugs or feature requests
+- Share your experiences and use cases
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🔗 Related Resources
 
 - [Active Directory Domain Services Overview](https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview)
-- [Install-ADDSForest Documentation](https://docs.microsoft.com/en-us/powershell/module/addsdeployment/install-addsforest)
+- [PowerShell Active Directory Module](https://docs.microsoft.com/en-us/powershell/module/activedirectory/)
+- [Windows Server Documentation](https://docs.microsoft.com/en-us/windows-server/)
 - [PowerShell Execution Policies](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies)
 
 ---
 
-*This script automates complex Active Directory deployment tasks, making it easier for administrators to set up consistent AD environments for testing, development, and proof-of-concept scenarios.*
+*This toolkit is continuously evolving. Star the repository to stay updated with new tools and improvements!*
